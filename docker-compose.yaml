@@ -1,0 +1,12 @@
+version: '3'
+services:
+  airflow:
+    image: apache/airflow:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./dags:/opt/airflow/dags
+    entrypoint: >
+      bash -c "airflow db init && \
+      (airflow users create -u airflow -p airflow -r Admin -e admin@example.com -f Admin -l User) && \
+      (exec airflow webserver & airflow scheduler)"
