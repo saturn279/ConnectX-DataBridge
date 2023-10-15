@@ -5,8 +5,22 @@ services:
     ports:
       - "8080:8080"
     volumes:
+      - ./airflow:/opt/airflow
       - ./dags:/opt/airflow/dags
     entrypoint: >
-      bash -c "airflow db init && \
+      bash -c "pip install pymongo && airflow db init && \
       (airflow users create -u airflow -p airflow -r Admin -e admin@example.com -f Admin -l User) && \
       (exec airflow webserver & airflow scheduler)"
+  api_server:
+    build:
+      context: api_server
+    ports:
+      - "8081:80"
+    volumes:
+      - ./api_server:/app
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+
